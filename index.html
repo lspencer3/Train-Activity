@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- LINK TO FIREBASE GOES HERE -->
+<script src="https://www.gstatic.com/firebasejs/4.4.0/firebase.js"></script>
+    <script src="http://momentjs.com/downloads/moment-with-locales.js"></script>
+    <style>
+        body {
+            margin-left: 10%;
+            margin-right: 10%;
+        }
+        .jumbotron {
+            text-align: center;
+            background-color: black;
+            color: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="jumbotron">
+        <h1 class="display-3">Employee Data Management</h1>
+        <p class="lead">A comprehensive  directory of employee billable hours</p>
+    </div>
+</header>
+    <div class="panel-group">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Current Train Schedule</div>
+            <div class="container">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Train Name</th>
+                        <th>Destination</th>
+                        <th>Frequency(min)</th>
+                        <th>Next Arrival</th>
+                        <th>Minutes away</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Add Train</h3>
+        </div>
+        <div class="panel-body">
+            <form>
+            <div class="form-group">
+                    <label for="exampleInput1">Train Name</label>
+                    <input id = "trainname" type="name" class="form-control"  placeholder="Name">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInput1">Destination</label>
+                    <input type="name" class="form-control" id="destinationname" placeholder="Destination">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInput2">First Train Time (HH:mm -military time)</label>
+                    <input id ="time" type="text" name = "time" class="form-control"  placeholder="Time">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInput3">Frequency (min)</label>
+                    <input id ="freq" type="freq" class="form-control"  placeholder="Minutes">
+                </div>
+        </div>
+        <button type="submit" id="submit" class="btn btn-default">Submit</button>
+        </form>
+    </div>        
+</div>
+<script>
+    // Initialize Firebase
+    var config = {
+    apiKey: "AIzaSyChCciIPK8mfAUalbGPkfFwbReOXg6BLvo",
+    authDomain: "trains-88d21.firebaseapp.com",
+    databaseURL: "https://trains-88d21.firebaseio.com",
+    projectId: "trains-88d21",
+    storageBucket: "",
+    messagingSenderId: "156695774770"
+  };
+    firebase.initializeApp(config);
+    // Get a reference to the database service
+    var database = firebase.database();
+    //Initial variables
+    var name;
+    var time;
+    var ftt;
+    var dest;
+    var col1;
+    var col2;
+    var col3;
+    var col4;
+    var row;
+
+    $(document).ready(function(){
+    // On Click of Button
+    $("#submit").on("click", function() {
+        event.preventDefault();
+        name = $("#trainname").val().trim();
+        dest = $("#destinationname").val().trim();
+        time = $("#time").val().trim();
+        ftt = $("#freq").val().trim();
+        database.ref().push({
+            name: name,
+            dest: dest,
+            time: time,
+            ftt: ftt
+        });
+    });
+    database.ref().on("child_added", function(snapshot) {
+        // Log everything that's coming out of snapshot
+        var now = moment().format("HH:mm");
+        console.log(snapshot.val());
+        console.log(snapshot.val().name);
+        console.log(snapshot.val().dest);
+        console.log(snapshot.val().time);
+        console.log(snapshot.val().ftt);
+
+        var fbname =snapshot.val().name;
+        var fbdest =snapshot.val().dest;
+        var fbtime =moment(snapshot.val().time, 'HH:mm');
+        var fbftt =moment(snapshot.val().ftt, 'mm');
+        var nextA;
+        var minA;
+
+       	if (moment(fbtime).diff(now)>=0){
+       		nextA = fbtime
+       		minA = fbtime.diff(now)
+
+       	}
+       	//else if (fbtime <now){
+
+       	//}
+
+
+        $("tbody").append("<tr><td>" + fbname + "</td><td>" + fbdest + 
+                        "</td><td>" + fbftt + "</td><td>" + nextA + 
+                        "</td><td>" + minA + 
+                        "</td>")
+        
+        //console.log(moment(now).diff(startDate,"minutes"));
+    }, function(errorObject) {
+        console.log("Errors handled: " + errorObject.code);
+    });
+});
+
+</script>
+</body>
+</html>
+</body>
+</html>
