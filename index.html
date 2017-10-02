@@ -165,17 +165,17 @@
         var now1 = nowConverted.add(1,"year")
         var time1 = timeConverted.add(1,"year")
 
-        console.log(now1)
+        console.log(now1,time1)
 
         var now2min = parseInt(now1.format("X"))
         var time2min = parseInt(time1.format("X"))
 
         //console.log(now2min,time2min)
 
-        diff2 = Math.round(((time2min-now2min))/60);
+        diff2 = Math.round((time2min-now2min)/60);
         console.log(diff2)
 
-        minA = (diff2%fbftt)*-1
+        minA =(fbftt-(diff2%fbftt)*-1)
 
         nextAp = moment(now1).add(minA,"minutes")
 
