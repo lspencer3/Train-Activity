@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
 </head>
 <body>
 <!DOCTYPE html>
@@ -25,6 +24,11 @@
             background-color: black;
             color: white;
             border-radius: 5px;
+        }
+
+        #submit{
+            margin-left: 15px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -172,10 +176,10 @@
 
         //console.log(now2min,time2min)
 
-        diff2 = Math.round((time2min-now2min)/60);
+        diff2 = Math.round((now2min-time2min)/60);
         console.log(diff2)
 
-        minA =(fbftt-(diff2%fbftt)*-1)
+        minA =(fbftt-(diff2%fbftt))
 
         nextAp = moment(now1).add(minA,"minutes")
 
