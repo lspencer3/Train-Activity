@@ -17,11 +17,6 @@ var name;
 var time;
  var ftt;
 var dest;
-var col1;
-var col2;
-var col3;
-var col4;
-var row;
 
 $(document).ready(function(){
     
@@ -99,12 +94,13 @@ $(document).ready(function(){
 
         nextA=moment(nextAp).format("HH:mm")
         console.log(nextA)
-
        }
+       
        $("tbody").append("<tr><td>" + fbname + "</td><td>" + fbdest + 
                         "</td><td>" + fbftt + "</td><td>" + nextA + 
                         "</td><td>" + minA + 
-                        "</td>")     
+                        "</td>") 
+        $("input").val("")   
     }, function(errorObject) {
         console.log("Errors handled: " + errorObject.code);
     });
