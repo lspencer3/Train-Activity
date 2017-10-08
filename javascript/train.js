@@ -15,13 +15,19 @@ var database = firebase.database();
 //Initial variables
 var name;
 var time;
- var ftt;
+var ftt;
 var dest;
 
+var fbname; 
+var fbdest; 
+var fbtime;
+var fbftt;
+var nextA;
+var minA;
+
 $(document).ready(function(){
-    
-    // On Click of Button get values and push to firebase
-    $("#submit").on("click", function() {
+    //on Click of Button get values and push to firebase
+    $("#submit").on("click", function(){
         event.preventDefault();
         name = $("#trainname").val().trim();
         dest = $("#destinationname").val().trim();
@@ -31,10 +37,22 @@ $(document).ready(function(){
             name: name,
             dest: dest,
             time: time,
-            ftt: ftt
+            ftt: ftt,
+            dateAdded: moment().format(),
+            lastUpdated: moment().format("HH:mm")
         });
     });
-    
+
+    //show current time and update also update firebase times
+    var updateTime = function(){
+    var now = moment().format('HH:mm');
+    $('#time').html(now);
+    //var key = database.ref().push().key.
+    //database.ref(key).set({
+        lastUpdated: now
+      //});
+    }
+
     //for every child added show the needed information
     database.ref().on("child_added", function(snapshot) {
         
@@ -47,12 +65,10 @@ $(document).ready(function(){
         //console.log(snapshot.val().time);
         //console.log(snapshot.val().ftt);
 
-        var fbname =snapshot.val().name;
-        var fbdest =snapshot.val().dest;
-        var fbtime =snapshot.val().time;
-        var fbftt =snapshot.val().ftt;
-        var nextA;
-        var minA;
+        fbname =snapshot.val().name;
+        fbdest =snapshot.val().dest;
+        fbtime =snapshot.val().time;
+        fbftt =snapshot.val().ftt;
         
         //time conversion
         // var nowconvert = moment(fbtime).format("X")
@@ -95,13 +111,16 @@ $(document).ready(function(){
         nextA=moment(nextAp).format("HH:mm")
         console.log(nextA)
        }
-       
+
        $("tbody").append("<tr><td>" + fbname + "</td><td>" + fbdest + 
                         "</td><td>" + fbftt + "</td><td>" + nextA + 
                         "</td><td>" + minA + 
                         "</td>") 
-        $("input").val("")   
-    }, function(errorObject) {
+        $("input").val("")
+
+    }, function(errorObject){
         console.log("Errors handled: " + errorObject.code);
-    });
+    }); 
+    updateTime();
+    setInterval(updateTime, 1000);
 });
